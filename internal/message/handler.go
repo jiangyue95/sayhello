@@ -27,5 +27,14 @@ func ListMessagesHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, msgs)
+	var formattedMsgs []gin.H
+	for _, msg := range msgs {
+		formattedMsgs = append(formattedMsgs, gin.H{
+			"id":         msg.ID,
+			"name":       msg.Name,
+			"body":       msg.Body,
+			"created_at": formatTime(msg.CreatedAt),
+		})
+	}
+	c.JSON(http.StatusOK, formattedMsgs)
 }

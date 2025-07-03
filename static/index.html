@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Sayhello</title>
+</head>
+<body>
+<h1>Sayhello</h1>
+<form id="message-form">
+  <label>Name: <input type="text" id="name" required></label><br><br>
+  <label>Body: <textarea id="body" required></textarea></label><br><br>
+  <button type="submit">Send Message</button>
+</form>
+<hr>
+<h2>All Messages</h2>
+<ul id="messages-list"></ul>
+
+<script>
+  const form = document.getElementById('message-form');
+  const messageList = document.getElementById('messages-list');
+
+  form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const body = document.getElementById('body').value;
+
+      const res = await fetch('/messages', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({Name: name, Body: body}),
+      });
+
+      const data = await res.json();
+      alert("Message sent!");
+      loadMessages();
+      form.reset();
+  });
+
+  async function loadMessages() {
+      const res = await fetch('/messages');
+      const data = await res.json();
+
+      messageList.innerHTML = '';
+      data.forEach(msg => {
+          const li = document.createElement('li');
+          li.textContent = `${msg.name}: ${msg.body}: ${msg.created_at}`;
+          messageList.appendChild(li);
+      });
+  }
+
+  loadMessages();
+</script>
+</body>
+</html>

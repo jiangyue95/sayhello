@@ -13,5 +13,8 @@ func RegisterRoutes() *gin.Engine {
 		msg.POST("", message.CreateMessageHandler)
 		msg.GET("", message.ListMessagesHandler)
 	}
+
+	r.StaticFile("/", "./static/index.html")
+
 	return r
 }
